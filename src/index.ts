@@ -16,7 +16,7 @@ app.use(cors())
 
 
 /* Get all invoices */
-app.get("/v0/invoices", async (req, res) => {
+app.get(`${v0_url}`, async (req, res) => {
     const limit = parseInt(req.query.limit as string) || 10;
     const offset = parseInt(req.query.offset as string) || 0;
     const invoices = await invoiceService.getAll(limit, offset);
