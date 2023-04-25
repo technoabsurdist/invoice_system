@@ -18,11 +18,11 @@ class InvoiceService {
     }
 
     /* Get all invoices */
-    async getAll(): Promise<Invoice[]> {
+    async getAll(limit: number, offset: number): Promise<Invoice[]> {
         const { invoicesCollection, invoiceItemsCollection } = await this.dbPromise;
 
         const invoices = await invoicesCollection.find().toArray();
-        const invoiceItems = await invoiceItemsCollection.find().toArray();
+        const invoiceItems = await invoiceItemsCollection.find().skip(offset).limit(limit).toArray();
 
         return invoices.map((inv: { id: string; clientName: string; createdAt: string | number | Date; }) => {
         const items = invoiceItems.filter((item: { invoiceId: string; }) => item.invoiceId === inv.id);
