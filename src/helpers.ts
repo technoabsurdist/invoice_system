@@ -2,7 +2,13 @@ import express from "express";
 import validator from "validator";
 import rateLimit from "express-rate-limit";
 
-/* Security constraint --> Validate Data */
+
+/**
+ * @param req request object
+ * @param res response object
+ * @param next next function
+ * @returns status 400 if invalid data, otherwise calls next()
+*/
 export const validateInvoiceData = (
     req: express.Request,
     res: express.Response,

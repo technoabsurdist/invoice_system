@@ -9,13 +9,13 @@ export class Invoice {
       id: string,
       clientName: string,
       items: { name: string; price: number; quantity: number }[],
-      createdAt?: Date
+      // createdAt?: Date
     ) {
       this.id = id;
       this.clientName = clientName;
       this.items = items;
       this.totalAmount = this.calculateTotalAmount();
-      this.createdAt = createdAt || new Date();
+      this.createdAt = new Date();
     }
   
     private calculateTotalAmount(): number {
