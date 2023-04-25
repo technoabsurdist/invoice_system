@@ -2,6 +2,8 @@
 
 This is a RESTful API for creating, managing, and processing invoices, implemented using Node.js, Express, and MongoDB. The API allows clients to create invoices, update existing ones, fetch invoices by ID, and delete them.
 
+![Invoice Header Image](https://visme.co/blog/wp-content/uploads/2021/08/How-to-make-an-invoice-Header.jpg)
+
 ## Features
 
 - Create invoices with multiple line items

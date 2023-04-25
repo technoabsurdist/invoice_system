@@ -5,6 +5,7 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 // const mongo_pass = process.env.MONGO_PASSWORD;
 // const uri = `mongodb+srv://andereemi:${mongo_pass}@cluster0.z12cm7l.mongodb.net/?retryWrites=true&w=majority`;
 
+// obviously not secure, but atm doesn't really matter right now. Just testing
 const uri = `mongodb+srv://andereemi:ejzDsAraY3sW93nW@cluster0.z12cm7l.mongodb.net/?retryWrites=true&w=majority`;
 
 const setupDatabase = async () => {
