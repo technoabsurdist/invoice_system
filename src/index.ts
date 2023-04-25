@@ -2,13 +2,18 @@ import express from "express";
 import { invoiceService } from "./invoiceService";
 import { validateInvoiceData, apiLimiter } from "./helpers";
 import CustomError from "./customError";
-
+import cors from "cors";
 
 const app = express();
 const port = 3000;
 
 const v0_url = "/v0/invoices";
 app.use(express.json());
+/* Limit api usage for security */ 
+app.use(apiLimiter);
+/* Allow cross-origin requests */ 
+app.use(cors())
+
 
 /* Get all invoices */
 app.get("/v0/invoices", async (_req, res) => {
@@ -58,9 +63,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
     res.status(err.statusCode || 500).json({ error: err.message });
 });
   
-/* Limit api usage for security */ 
-app.use(apiLimiter);
-
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
