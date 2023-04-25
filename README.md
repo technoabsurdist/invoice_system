@@ -20,7 +20,6 @@ This is a RESTful API for creating, managing, and processing invoices, implement
 - MongoDB
 - TypeScript
 - Validator
-- Express-rate-limit
 
 ## Getting Started
 
