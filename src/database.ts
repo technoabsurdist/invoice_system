@@ -7,7 +7,10 @@ import dotenv from 'dotenv';
 // const uri = `mongodb+srv://andereemi:${mongo_pass}@cluster0.z12cm7l.mongodb.net/?retryWrites=true&w=majority`;
 
 // obviously not secure, but atm doesn't really matter right now. Just testing
-const uri = `mongodb+srv://andereemi:ejzDsAraY3sW93nW@cluster0.z12cm7l.mongodb.net/?retryWrites=true&w=majority`;
+// const uri = `mongodb+srv://andereemi:ejzDsAraY3sW93nW@cluster0.z12cm7l.mongodb.net/?retryWrites=true&w=majority`;
+
+dotenv.config();
+const uri = process.env.MONGODB_URI || "";
 
 const setupDatabase = async () => {
     console.log(uri)
