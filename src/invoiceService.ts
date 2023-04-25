@@ -1,36 +1,72 @@
 import { Invoice } from "./invoice";
+import setupDatabase from "./database";
 
 class InvoiceService {
-  private invoices: Invoice[] = [];
+  private dbPromise: Promise<any>;
 
-  public create(invoice: Invoice): Invoice {
-    this.invoices.push(invoice);
+  constructor() {
+    this.dbPromise = setupDatabase();
+  }
+
+  async create(invoice: Invoice): Promise<Invoice> {
+    const { invoicesCollection, invoiceItemsCollection } = await this.dbPromise;
+    await invoicesCollection.insertOne(invoice);
+    await invoiceItemsCollection.insertMany(invoice.items.map(item => ({ ...item, invoiceId: invoice.id })));
     return invoice;
   }
 
-  public getAll(): Invoice[] {
-    return this.invoices;
+  async getAll(): Promise<Invoice[]> {
+    const { invoicesCollection, invoiceItemsCollection } = await this.dbPromise;
+
+    const invoices = await invoicesCollection.find().toArray();
+    const invoiceItems = await invoiceItemsCollection.find().toArray();
+
+    return invoices.map((inv: { id: string; clientName: string; createdAt: string | number | Date; }) => {
+      const items = invoiceItems.filter((item: { invoiceId: string; }) => item.invoiceId === inv.id);
+      return new Invoice(inv.id, inv.clientName, items, new Date(inv.createdAt));
+    });
   }
 
-  public getById(id: string): Invoice | null {
-    const invoice = this.invoices.find((inv) => inv.id === id);
-    return invoice || null;
+  async getById(id: string): Promise<Invoice | null> {
+    const { invoicesCollection, invoiceItemsCollection } = await this.dbPromise;
+
+    const invoice = await invoicesCollection.findOne({ id });
+    if (!invoice) return null;
+
+    const items = await invoiceItemsCollection.find({ invoiceId: id }).toArray();
+    return new Invoice(invoice.id, invoice.clientName, items, new Date(invoice.createdAt));
   }
 
-  public update(id: string, newInvoiceData: Partial<Invoice>): Invoice | null {
-    const invoiceIndex = this.invoices.findIndex((inv) => inv.id === id);
-    if (invoiceIndex === -1) return null;
+  async update(id: string, newInvoiceData: Partial<Invoice>): Promise<Invoice | null> {
+    const currentInvoice = await this.getById(id);
+    if (!currentInvoice) return null;
 
-    const updatedInvoice = { ...this.invoices[invoiceIndex], ...newInvoiceData };
-    this.invoices.splice(invoiceIndex, 1, updatedInvoice);
+    const updatedInvoiceData = { ...currentInvoice, ...newInvoiceData };
+    const updatedInvoice = new Invoice(
+      updatedInvoiceData.id,
+      updatedInvoiceData.clientName,
+      updatedInvoiceData.items,
+      updatedInvoiceData.createdAt
+    );
+
+    const { invoicesCollection, invoiceItemsCollection } = await this.dbPromise;
+    await invoicesCollection.updateOne({ id }, { $set: updatedInvoice });
+
+    await invoiceItemsCollection.deleteMany({ invoiceId: id });
+    await invoiceItemsCollection.insertMany(updatedInvoice.items.map(item => ({ ...item, invoiceId: id })));
+
     return updatedInvoice;
   }
 
-  public delete(id: string): boolean {
-    const invoiceIndex = this.invoices.findIndex((inv) => inv.id === id);
-    if (invoiceIndex === -1) return false;
+  async delete(id: string): Promise<boolean> {
+    const { invoicesCollection, invoiceItemsCollection } = await this.dbPromise;
 
-    this.invoices.splice(invoiceIndex, 1);
+    const invoice = await invoicesCollection.findOne({ id });
+    if (!invoice) return false;
+
+    await invoiceItemsCollection.deleteMany({ invoiceId: id });
+    await invoicesCollection.deleteOne({ id });
+
     return true;
   }
 }

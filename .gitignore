@@ -1,0 +1,7 @@
+package.json
+*package-lock.json*
+*package.json*
+*public*
+*tsconfig.json*
+/node_modules/
+*.db
