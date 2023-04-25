@@ -1,4 +1,5 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
+import dotenv from 'dotenv';
 
 // import dotenv from 'dotenv';
 // dotenv.config();
@@ -9,6 +10,7 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 const uri = `mongodb+srv://andereemi:ejzDsAraY3sW93nW@cluster0.z12cm7l.mongodb.net/?retryWrites=true&w=majority`;
 
 const setupDatabase = async () => {
+    console.log(uri)
     const client = new MongoClient(uri, {
         serverApi: {
         version: ServerApiVersion.v1,
