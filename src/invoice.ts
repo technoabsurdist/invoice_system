@@ -15,7 +15,7 @@ export class Invoice {
       this.clientName = clientName;
       this.items = items;
       this.totalAmount = this.calculateTotalAmount();
-      this.createdAt = createdAt || new Date();
+      this.createdAt = new Date();
     }
   
     private calculateTotalAmount(): number {

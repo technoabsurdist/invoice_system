@@ -1,5 +1,6 @@
 import express from "express";
 import { invoiceService } from "./invoiceService";
+import { validateInvoiceData } from "./helpers";
 
 const app = express();
 const port = 3000;
@@ -20,7 +21,7 @@ app.get("/invoices/:id", async (req, res) => {
 });
 
 /* Post a new invoice */
-app.post("/invoices", async (req, res) => {
+app.post("/invoices", validateInvoiceData, async (req, res) => {
   if (!req.body.clientName || !req.body.items) return res.sendStatus(400);
   const invoice = await invoiceService.create(req.body);
   res.send(invoice);
@@ -28,7 +29,7 @@ app.post("/invoices", async (req, res) => {
 });
 
 /* Update an existing invoice */
-app.put("/invoices/:id", async (req, res) => {
+app.put("/invoices/:id", validateInvoiceData, async (req, res) => {
   const updatedInvoice = await invoiceService.update(req.params.id, req.body);
   if (!updatedInvoice) return res.sendStatus(404);
   res.send(updatedInvoice);

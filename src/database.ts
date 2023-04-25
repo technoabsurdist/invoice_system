@@ -1,6 +1,11 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-const uri = "mongodb+srv://andereemi:ejzDsAraY3sW93nW@cluster0.z12cm7l.mongodb.net/?retryWrites=true&w=majority";
+// import dotenv from 'dotenv';
+// dotenv.config();
+// const mongo_pass = process.env.MONGO_PASSWORD;
+// const uri = `mongodb+srv://andereemi:${mongo_pass}@cluster0.z12cm7l.mongodb.net/?retryWrites=true&w=majority`;
+
+const uri = `mongodb+srv://andereemi:ejzDsAraY3sW93nW@cluster0.z12cm7l.mongodb.net/?retryWrites=true&w=majority`;
 
 const setupDatabase = async () => {
   const client = new MongoClient(uri, {
